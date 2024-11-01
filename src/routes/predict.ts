@@ -20,7 +20,12 @@ router.post(
       const imageBuffer = await image.arrayBuffer()
       const imageUint8Array = new Uint8Array(imageBuffer)
 
-      const model = await loadModel()
+      let model = global.model
+      if (!global.model) {
+        model = await loadModel()
+        global.model = model
+      }
+
       const { result, suggestion } = await predictClassification(model, imageUint8Array)
 
       const id = crypto.randomUUID()
